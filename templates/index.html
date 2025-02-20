@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The ISS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-image: url('https://cdn.pixabay.com/photo/2012/10/26/02/39/international-space-station-63128_960_720.jpg');">
+    <div class="container">
+        <h1>Where is the ISS?</h1>
+        <div class="date-time">
+            <h2>Date and Time</h2>
+            <p id="datetime"></p>
+        </div>
+        <div class="ISSPosition">
+            <h2>ISS Position Vs. You</h2>
+            <p id="ISSPos">ISS Position is LAT: {{ iss_latitude }}   LONG: {{ iss_longitude }}</p>
+            <p id="YourPos"></p>
+            <button onclick="refreshISSPosition()">Refresh ISS Position</button>
+        </div>
+        <div class="goLook">
+            <h2>Can you go out and see the ISS?</h2>
+            <h4><p id="goLookStatus"></p></h4>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const weather_id = "{{ weather_id }}";
+        const weather_desc = "{{ currWeatherDesc }}";
+        const iss_latitude = "{{ iss_latitude }}";
+        const iss_longitude = "{{ iss_longitude }}";
+        const MY_LAT = "{{ MY_LAT }}";
+        const MY_LONG = "{{ MY_LONG }}";
+        const sunriseHour = "{{ sunrise_hour }}";
+        const sunsetHour = "{{ sunset_hour }}";
+        const sunsetMinute = "{{ sunset_minute }}";
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
