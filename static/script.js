@@ -45,7 +45,7 @@ function getLocation() {
  * @return  {} fetch('/update_location')
  */
 function sendLocationToServer(lat, lon) {
-    fetch('/update_location', {
+    fetch('./update_location', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ function showPosition(position) {
  * @return  {} fetch('/refresh_iss_position')
  */
 function refreshISSPosition() {
-    fetch('/refresh_iss_position')
+    fetch('./refresh_iss_position')
         .then(response => response.json())
         .then(data => {
             document.getElementById('ISSPos').innerText = `ISS Position is LAT: ${data.iss_latitude}   LONG: ${data.iss_longitude}`;
