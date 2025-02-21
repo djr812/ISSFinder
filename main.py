@@ -1,3 +1,32 @@
+"""
+ISSFinder
+=========
+
+Description:
+-------------
+A Flask-based web application that shows the current location of the International Space Station (ISS)
+relative to the user's location. It also fetches the user's current weather and provides a fun message 
+about whether it's worth getting out of bed to see the ISS, based on visibility and weather conditions.
+
+The server-side logic, including the retrieval of data from external APIs and determining if it is daytime 
+or nighttime based on the user's geolocation, is handled using Python with Flask.
+
+Features:
+---------
+- Retrieves and displays the user's current latitude and longitude.
+- Fetches the current location of the ISS (latitude and longitude).
+- Gets the current weather for the user's location via the Weather API.
+- Uses the Sunrise-Sunset API to determine if it is daytime or nighttime at the user's location.
+- Provides a recommendation to the user about whether it is a good time to look for the ISS.
+
+APIs Used:
+-----------
+- ISS Location API (https://wheretheiss.at/w/developer)
+- Weather API (e.g., OpenWeatherMap - https://openweathermap.org/api)
+- Sunrise-Sunset API (https://sunrise-sunset.org/api)
+
+"""
+
 import requests
 from datetime import datetime
 import os
@@ -18,6 +47,12 @@ MY_LONG = 152.919906
 
 
 def get_iss_pos():
+    """
+    Desc:   Fetches the current location of the International Space 
+            Station (ISS) using the ISS API.
+    Params: None
+    Return: Dictionary containing the latitude and longitude of the ISS.
+    """
     iss_pos = {}
     response = requests.get(url="http://api.open-notify.org/iss-now.json")
     response.raise_for_status()
@@ -29,13 +64,18 @@ def get_iss_pos():
 
 
 def get_sun_pos():
+    """
+    Desc:   Fetches the sunrise and sunset times for the user's location
+            using the Sunrise-Sunset API.
+    Params: None
+    Return: Dictionary containing the sunrise and sunset times.
+    """
     sun_pos = {}
     parameters = {
         "lat": MY_LAT,
         "lng": MY_LONG,
         "formatted": 0,
     }
-
     response = requests.get("https://api.sunrise-sunset.org/json", params=parameters)
     response.raise_for_status()
     data = response.json()
@@ -59,6 +99,12 @@ def get_sun_pos():
 
 
 def get_weather():
+    """
+    Desc:   Fetches the current weather for the user's location using the
+            OpenWeather API.
+    Params: None
+    Return: Dictionary containing the weather ID and description.
+    """
     weather_details = {}
     weather_parameters = {
         "lat": MY_LAT,
@@ -78,6 +124,12 @@ def get_weather():
 
 @app.route('/')
 def index():
+    """
+    Desc:   Renders the main page of the web application with the current
+            weather, ISS location, and sunrise/sunset times.
+    Params: None
+    Return: Rendered HTML template with the relevant data.
+    """
     weather = get_weather()
     weather_id = weather["id"]
     weather_desc = weather["desc"]
@@ -102,6 +154,12 @@ def index():
 
 @app.route('/refresh_iss_position')
 def refresh_iss_position():
+    """
+    Desc:   Fetches the current location of the International Space Station
+            (ISS) and returns the latitude and longitude.
+    Params: None
+    Return: Dictionary containing the latitude and longitude of the ISS.
+    """
     iss_position = get_iss_pos()
     return {
         "iss_latitude": iss_position["lat"],
@@ -111,6 +169,12 @@ def refresh_iss_position():
 
 @app.route('/update_location', methods=['POST'])
 def update_location():
+    """
+    Desc:   Updates the user's location based on the latitude and longitude
+            provided in the POST request.
+    Params: None
+    Return: Dictionary with a success message.
+    """
     data = request.get_json()
     global MY_LAT, MY_LONG
     MY_LAT = data['lat']

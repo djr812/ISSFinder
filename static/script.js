@@ -4,6 +4,16 @@ let myLat;
 let myLong;
 
 
+// Get location on page load
+getLocation();
+
+
+/**
+ * Desc:    This function updates the date and time on the page.
+ *          It is called every second.
+ * @param   None
+ * @return  {}document.getElementById('datetime').innerText
+ */
 function updateDateTime() {
     const now = new Date();
     document.getElementById('datetime').innerText = now.toLocaleString();
@@ -14,6 +24,11 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 
 
+/**
+ * Desc:    This function gets the user's location and sends it to the server.
+ * @param   None
+ * @return  {function} showPosition(position)
+ */
 function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
@@ -23,6 +38,12 @@ function getLocation() {
 }
 
 
+/**
+ * Desc:    This function sends the user's location to the server.
+ * @param   {Float} lat  
+ * @param   {Float} lon
+ * @return  {} fetch('/update_location')
+ */
 function sendLocationToServer(lat, lon) {
     fetch('/update_location', {
         method: 'POST',
@@ -41,6 +62,11 @@ function sendLocationToServer(lat, lon) {
 }
 
 
+/**
+ * Desc:    This function displays the user's position on the page.
+ * @param   {Object} position
+ * @return  {} x.innerHTML 
+ */
 function showPosition(position) {
     myLat = position.coords.latitude;
     myLong = position.coords.longitude;
@@ -49,6 +75,12 @@ function showPosition(position) {
 }
 
 
+/**
+ * Desc:    On Click this function sends a request to the server 
+ *          to refresh the ISS position.
+ * @param   None
+ * @return  {} fetch('/refresh_iss_position')
+ */
 function refreshISSPosition() {
     fetch('/refresh_iss_position')
         .then(response => response.json())
@@ -61,6 +93,11 @@ function refreshISSPosition() {
 }
 
 
+/**
+ * Desc:    This function checks if the weather is clear.
+ * @param   None
+ * @returns {boolean} True if the weather is clear, False otherwise.
+ */
 function isClear() {
     if (weather_id == 800 || weather_id == 801) {
         return true;
@@ -70,6 +107,11 @@ function isClear() {
 }
 
 
+/**
+ * Desc:   This function checks if it is nighttime.
+ * @param  None
+ * @returns {boolean} True if it is nighttime, False otherwise.
+ */
 function isNight() {
     if (currentHour >= sunsetHour || currentHour <= sunriseHour) {
         return true;
@@ -79,6 +121,11 @@ function isNight() {
 }
 
 
+/**
+ * Desc:    This function checks if the ISS is overhead.
+ * @param   None
+ * @returns {boolean} True if the ISS is overhead, False otherwise.
+ */
 function isISSOverhead() {
     if (myLat - 5 <= iss_latitude <= myLat + 5 && myLong - 5 <= iss_longitude <= myLong + 5) {
         return true;
@@ -88,6 +135,11 @@ function isISSOverhead() {
 }
 
 
+/**
+ * Desc:    This function updates the Go Look status on the page.
+ * @param   None
+ * @returns {} document.getElementById('goLookStatus').innerHTML
+ */
 function updateGoLookStatus() {
     const now = new Date();
     const currentHour = now.getHours();
@@ -111,7 +163,5 @@ function updateGoLookStatus() {
 }
 
 
-// Get location on page load
-getLocation();
 // Update Go Look status on page load
 updateGoLookStatus();
